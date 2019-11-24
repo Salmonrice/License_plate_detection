@@ -1,0 +1,15 @@
+item {
+  id: 1
+  name: 'plate'
+}
+
+item {
+  id: 2
+  name: 'T'
+}
+
+item {
+  id: 3
+  name: 'NG'
+}
+
