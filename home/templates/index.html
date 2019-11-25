@@ -16,44 +16,42 @@
     </head>
     <body>
     <div class="container">
-        <div class="header">
-            <h3 class="text-muted">upload</h3>
+      <div class="wrapper">
+        <div class="result">
+          <table id="result" width="100%"></table>
         </div>
-        <hr/>
-        <div>
-    
-            <form action="upload" method="post" enctype="multipart/form-data">
-                <div class="row">
-                    <div class="col-lg-4">
-                        <input type="file" name="file" id="inputFile1"><br/><br/>
-                        <input type="submit" value="Upload">
-                    </div>
-                    <div class="col-lg-8">
-                        <img id="imagen"><br/>
-                    </div>
-                </div>
-    
-    
-            </form>
+        <div class="image-wrapper">
+          <img id="image" />
+          <button id="pickupImageButton" class="add-image-button">
+            Add Image
+          </button>
         </div>
+        <form id="formImage" method="POST" action="">
+          <input type="hidden" name="image" />
+        </form>
+        <input id="pickupImage" style="display: none;" type="file" />
+      </div>
     </div>
+  </body>
     </body>
     <script>
-        function init() {
-            var inputFile = document.getElementById('inputFile1');
-            inputFile.addEventListener('change', mostrarImagen, false);
-        }
-        function mostrarImagen(event) {
-            var file = event.target.files[0];
-            var reader = new FileReader();
-            reader.onload = function (event) {
-                var img = document.getElementById('imagen');
-                img.src = event.target.result;
-               
-            }
-            reader.readAsDataURL(file);
-        }
-        window.addEventListener('load', init, false);
+      pickupImageButtonEl.onclick = () => {
+      pickupImageEl.click();
+    };
+    const toBase64 = file =>
+      new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+
+    pickupImageEl.onchange = async e => {
+      formImageEl[0].value = await toBase64(e.target.files[0]);
+      pickupImageButtonEl.innerText = "Loading..."
+      pickupImageButtonEl.disabled = true
+      formImageEl.submit();
+    };
     </script>
     </html>
     
