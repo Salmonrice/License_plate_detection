@@ -9,6 +9,8 @@ import tensorflow as tf
 from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as vis_util
 
+execution_path = os.getcwd()
+
 def processImage(input_file,output_file,fileName) :
 
     sys.path.append("..")
