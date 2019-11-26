@@ -21,10 +21,7 @@ def processImage(input_file,output_file,fileName) :
 
 
     MODEL_NAME = 'home\object_detection\\inference_graph'
-    IMAGE_NAME = 'object_detection\\test\\'+fileName
-    print(IMAGE_NAME+'   ===Dwadwadwadwadwa')
-    print(fileName)
-    lists = IMAGE_NAME.split("/")
+    IMAGE_NAME = 'test.jpg'
 
 
     CWD_PATH = os.getcwd()
@@ -66,7 +63,6 @@ def processImage(input_file,output_file,fileName) :
 
     image = cv2.imread(IMAGE_NAME)
     img = image.copy()
-    print(lists[len(lists)-1])
     image_expanded = np.expand_dims(image, axis=0)
 
     (boxes, scores, classes, num) = sess.run(
@@ -85,8 +81,9 @@ def processImage(input_file,output_file,fileName) :
             min_score_thresh=0.70)
 
     index = 0
-    img_name = lists[len(lists)-1].split(".")
+
     image_list = []
+    index = 0
     for index,value in enumerate(classes[0]):
         object_dir = {}
         if scores[0,index] > 0.7:
@@ -97,30 +94,29 @@ def processImage(input_file,output_file,fileName) :
             im_height,im_width = img.shape[:2]
             (xminn, xmaxx, yminn, ymaxx) = (xmin * im_width, xmax * im_width, ymin * im_height, ymax * im_height)
             crop_img = img[int(yminn):int(ymaxx), int(xminn):int(xmaxx)]
-            image_list.append(str(img_name[0])+"_"+str(index)+'.'+str(img_name[1]))
-            cv2.imwrite("ocr/"+str(img_name[0])+"_"+str(index)+'.'+str(img_name[1]),crop_img)
+            cv2.imwrite("ocr"+"_"+str(index)+'.jpg',crop_img)
 
-    cv2.imwrite("result/"+str(lists[len(lists)-1]),image)
-    cv2.imwrite("next/"+str(lists[len(lists)-1]),img)
-    return image_list
+    cv2.imwrite("result.jpg",image)
+    cv2.imwrite("next.jpg",img)
+    return index
 
 
 from django.core.files.storage import FileSystemStorage
 
 
-def base64ToFilePath(base64Str , basePath = "C:\\tensorflow1\License_plate_detection\home\object_detection\\test"):
+def base64ToFilePath(base64Str , basePath = ""):
     img_data = bytes(base64Str, 'utf-8')
     fileName = datetime.today().strftime('%Y-%m-%d-%H:%M:%S') + ".jpg"
     filePath = basePath + fileName
     print(filePath+ "  wa  wad awd wadad awdaw d")
-    with open(f"{{filePath}}" , "wb") as fh:
+    with open("test.jpg" , "wb") as fh:
         fh.write(base64.decodebytes(img_data))
         fh.close()
     return fileName
 
 def filePathToBase64(filePath):
     base64Str = ''
-    with open(os.path.join(execution_path ,filePath ), "rb") as image_file:
+    with open("test.jpg" , "rb") as image_file:
         base64Str = base64.b64encode(image_file.read())
     return 'data:image/png;base64,' + base64Str.decode("utf-8")
 
@@ -130,12 +126,9 @@ class HomePageView(TemplateView):
     def post(self, request, **kwargs):
         image = request.POST['image']
         image = re.sub('^data:image\/[a-z]+;base64,','', image)
-        #inputPath = "./home/object_detection/test/"
-        #outputPath = "./home/object_detection/result/"
         inputPath = ".\\object_detection\\test\\"
         outputPath = ".\\object_detection\\result\\"
         fileName = base64ToFilePath(image)
         index = processImage(inputPath + fileName , outputPath + fileName ,fileName)
         base64Str = filePathToBase64(outputPath + fileName)
-        print(json.dumps(result[1], separators=(',', ':')))
         return render(request, '.\\home\\templates\\index.html', { 'image' : base64Str } )
