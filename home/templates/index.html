@@ -43,7 +43,7 @@
 
     let image = "{{image}}";
     let itemJson = "{{items}}"
-
+    let number = "{{number}}"
     if (image === "") {
     } else {
       imageEl.src = "{{image}}";
@@ -66,6 +66,11 @@
       pickupImageButtonEl.disabled = true
       formImageEl.submit();
     };
+
+    for(let i = 0 ; i < number ; i++){
+      document.write(i);
+    }
     </script>
+
     </html>
     

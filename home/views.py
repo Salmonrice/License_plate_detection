@@ -83,7 +83,7 @@ def processImage(input_file,output_file,fileName) :
     index = 0
 
     image_list = []
-    index = 0
+    count = 0
     for index,value in enumerate(classes[0]):
         object_dir = {}
         if scores[0,index] > 0.7:
@@ -95,10 +95,11 @@ def processImage(input_file,output_file,fileName) :
             (xminn, xmaxx, yminn, ymaxx) = (xmin * im_width, xmax * im_width, ymin * im_height, ymax * im_height)
             crop_img = img[int(yminn):int(ymaxx), int(xminn):int(xmaxx)]
             cv2.imwrite("ocr"+"_"+str(index)+'.jpg',crop_img)
+            count += 1
 
     cv2.imwrite("result.jpg",image)
     cv2.imwrite("next.jpg",img)
-    return index
+    return count
 
 
 from django.core.files.storage import FileSystemStorage
@@ -129,6 +130,7 @@ class HomePageView(TemplateView):
         inputPath = ".\\object_detection\\test\\"
         outputPath = ".\\object_detection\\result\\"
         fileName = base64ToFilePath(image)
-        index = processImage(inputPath + fileName , outputPath + fileName ,fileName)
+        count = 0
+        count = processImage(inputPath + fileName , outputPath + fileName ,fileName)
         base64Str = filePathToBase64(outputPath + fileName)
-        return render(request, '.\\home\\templates\\index.html', { 'image' : base64Str } )
+        return render(request, '.\\home\\templates\\index.html', { 'image' : base64Str , 'number' : count } )
