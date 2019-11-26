@@ -35,6 +35,20 @@
   </body>
     </body>
     <script>
+    let pickupImageButtonEl = document.getElementById("pickupImageButton");
+    let imageEl = document.getElementById("image");
+    let pickupImageEl = document.getElementById("pickupImage");
+    let formImageEl = document.getElementById("formImage");
+    let resultEl = document.getElementById("result");
+
+    let image = "{{image}}";
+    let itemJson = "{{items}}"
+
+    if (image === "") {
+    } else {
+      imageEl.src = "{{image}}";
+    }
+
       pickupImageButtonEl.onclick = () => {
       pickupImageEl.click();
     };

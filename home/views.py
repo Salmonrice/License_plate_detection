@@ -20,8 +20,10 @@ def processImage(input_file,output_file,fileName) :
     from object_detection.utils import visualization_utils as vis_util
 
 
-    MODEL_NAME = './object_detection/inference_graph'
-    IMAGE_NAME = './object_detection/test/562000004755601.jpg'
+    MODEL_NAME = 'home\object_detection\\inference_graph'
+    IMAGE_NAME = 'object_detection\\test\\'+fileName
+    print(IMAGE_NAME+'   ===Dwadwadwadwadwa')
+    print(fileName)
     lists = IMAGE_NAME.split("/")
 
 
@@ -31,7 +33,7 @@ def processImage(input_file,output_file,fileName) :
     PATH_TO_CKPT = os.path.join(CWD_PATH,MODEL_NAME,'frozen_inference_graph.pb')
 
 
-    PATH_TO_LABELS = os.path.join(CWD_PATH,'training','labelmap.pbtxt')
+    PATH_TO_LABELS = os.path.join(CWD_PATH,'home\object_detection\\training','labelmap.pbtxt')
 
 
     PATH_TO_IMAGE = os.path.join(CWD_PATH,IMAGE_NAME)
@@ -102,12 +104,18 @@ def processImage(input_file,output_file,fileName) :
     cv2.imwrite("next/"+str(lists[len(lists)-1]),img)
     return image_list
 
-def base64ToFilePath(base64Str , basePath = "./home/object_detection/test"):
+
+from django.core.files.storage import FileSystemStorage
+
+
+def base64ToFilePath(base64Str , basePath = "C:\\tensorflow1\License_plate_detection\home\object_detection\\test"):
     img_data = bytes(base64Str, 'utf-8')
     fileName = datetime.today().strftime('%Y-%m-%d-%H:%M:%S') + ".jpg"
     filePath = basePath + fileName
-    with open(os.path.join(execution_path ,filePath ), "wb") as fh:
+    print(filePath+ "  wa  wad awd wadad awdaw d")
+    with open(f"{{filePath}}" , "wb") as fh:
         fh.write(base64.decodebytes(img_data))
+        fh.close()
     return fileName
 
 def filePathToBase64(filePath):
@@ -124,8 +132,8 @@ class HomePageView(TemplateView):
         image = re.sub('^data:image\/[a-z]+;base64,','', image)
         #inputPath = "./home/object_detection/test/"
         #outputPath = "./home/object_detection/result/"
-        inputPath = "./object_detection/test/"
-        outputPath = "./object_detection/result/"
+        inputPath = ".\\object_detection\\test\\"
+        outputPath = ".\\object_detection\\result\\"
         fileName = base64ToFilePath(image)
         index = processImage(inputPath + fileName , outputPath + fileName ,fileName)
         base64Str = filePathToBase64(outputPath + fileName)
