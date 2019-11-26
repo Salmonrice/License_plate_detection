@@ -94,11 +94,11 @@ def processImage(input_file,output_file,fileName) :
             im_height,im_width = img.shape[:2]
             (xminn, xmaxx, yminn, ymaxx) = (xmin * im_width, xmax * im_width, ymin * im_height, ymax * im_height)
             crop_img = img[int(yminn):int(ymaxx), int(xminn):int(xmaxx)]
-            cv2.imwrite("ocr"+"_"+str(index)+'.jpg',crop_img)
+            cv2.imwrite("C:\\tensorflow1\\License_plate_detection\\ocr"+"_"+str(index)+'.jpg',crop_img)
             count += 1
 
-    cv2.imwrite("result.jpg",image)
-    cv2.imwrite("next.jpg",img)
+    cv2.imwrite("C:\\tensorflow1\\License_plate_detection\\result.jpg",image)
+    cv2.imwrite("C:\\tensorflow1\\License_plate_detection\\next.jpg",img)
     return count
 
 
@@ -109,7 +109,6 @@ def base64ToFilePath(base64Str , basePath = ""):
     img_data = bytes(base64Str, 'utf-8')
     fileName = datetime.today().strftime('%Y-%m-%d-%H:%M:%S') + ".jpg"
     filePath = basePath + fileName
-    print(filePath+ "  wa  wad awd wadad awdaw d")
     with open("test.jpg" , "wb") as fh:
         fh.write(base64.decodebytes(img_data))
         fh.close()
@@ -117,7 +116,7 @@ def base64ToFilePath(base64Str , basePath = ""):
 
 def filePathToBase64(filePath):
     base64Str = ''
-    with open("test.jpg" , "rb") as image_file:
+    with open("result.jpg" , "rb") as image_file:
         base64Str = base64.b64encode(image_file.read())
     return 'data:image/png;base64,' + base64Str.decode("utf-8")
 
@@ -128,9 +127,9 @@ class HomePageView(TemplateView):
         image = request.POST['image']
         image = re.sub('^data:image\/[a-z]+;base64,','', image)
         inputPath = ".\\object_detection\\test\\"
-        outputPath = ".\\object_detection\\result\\"
+        outputPath = "C:\\tensorflow1\\License_plate_detection\\home\\templates\\result.jpg"
         fileName = base64ToFilePath(image)
         count = 0
         count = processImage(inputPath + fileName , outputPath + fileName ,fileName)
-        base64Str = filePathToBase64(outputPath + fileName)
-        return render(request, '.\\home\\templates\\index.html', { 'image' : base64Str , 'number' : count } )
+        base64Str = filePathToBase64(outputPath)
+        return render(request, '.\\home\\templates\\index.html', { 'image' : base64Str ,  'number' : count } )
